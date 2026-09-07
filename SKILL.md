@@ -288,6 +288,7 @@ description: >-
   段落间距: 18px，两端对齐
   关键数据高亮: 段落内的数字/价格/百分比用 #2563eb + 700w 突出
   图表: figure 居中，上下 32px 间距
+  截图: figure 包裹，100% 宽度，8px 圆角，1px #e5e7eb 边框，figcaption 居中说明
   模块分隔: `✦ ✦ ✦` 居中，48px 上下间距
 
 响应式:
@@ -371,6 +372,39 @@ description: >-
 </html>
 ```
 
+### 截图插入规范
+
+在 UI 设计分析 section 中，设计系统提取表格之后、判断结论之前，插入产品截图。
+
+**HTML 结构：**
+```html
+<h3>网站截图</h3>
+
+<figure style="margin:24px 0;">
+  <img src="screenshots/hero.png" alt="产品首页" style="width:100%;border-radius:8px;border:1px solid #e5e7eb;">
+  <figcaption style="font-size:0.78rem;color:#6b7280;margin-top:8px;text-align:center;font-family:-apple-system,sans-serif;">
+    [产品名] 首页 · [截图说明：展示的设计元素或交互模式]
+  </figcaption>
+</figure>
+
+<figure style="margin:24px 0;">
+  <img src="screenshots/product.png" alt="产品功能页" style="width:100%;border-radius:8px;border:1px solid #e5e7eb;">
+  <figcaption style="font-size:0.78rem;color:#6b7280;margin-top:8px;text-align:center;font-family:-apple-system,sans-serif;">
+    [产品名] 功能页 · [截图说明]
+  </figcaption>
+</figure>
+```
+
+**截图来源：**
+- 运行 `scripts/capture-screenshots.js <官网URL> ./screenshots` 自动生成
+- 保存为 `screenshots/hero.png`、`screenshots/product.png`、`screenshots/about.png`
+- 报告中使用相对路径引用 `screenshots/*.png`
+
+**图注写作要求：**
+- 一句话说明截图内容
+- 点出设计亮点或问题（如"深色 Hero 区传达技术感"、"信息密度偏高，适合 B2B 决策者"）
+- 字体：无衬线，0.78rem，#6b7280 灰色，居中
+
 ### 模块顺序
 
 1. **标题区**：kicker "Product Deep Dive" + 产品标题 + byline（日期 + 阅读时长）
@@ -396,7 +430,7 @@ description: >-
 ### 禁止事项
 
 - ❌ 不得引用任何外部 CSS/JS/字体文件（必须完全自包含）
-- ❌ 不得使用 `<img>` 引用网络图片（除非用户提供截图）
+- ❌ 不得使用 `<img>` 引用网络图片（除非用户提供截图）。**允许**引用 `scripts/capture-screenshots.js` 生成的本地截图
 - ❌ 不得引用任何 JS 图表库
 - ❌ 不得使用 `<canvas>` 绘制图表（必须用 SVG 或纯 CSS）
 - ❌ 不得罗列功能清单而不加判断
@@ -431,8 +465,9 @@ description: >-
 ## 使用流程
 
 1. **信息收集**：按搜索渠道矩阵搜索产品核心信息、定价、用户评价、竞品
-2. **六层依次分析**：每层完成后输出结论判断
-3. **输出完整 HTML 报告**到当前目录
-4. **告知用户文件路径**，询问是否需要调整分析深度或方向
+2. **视觉证据采集**：运行 `scripts/capture-screenshots.js <产品官网URL> ./screenshots` 截取 hero/产品页/关于页
+3. **六层依次分析**：每层完成后输出结论判断
+4. **输出完整 HTML 报告**到当前目录，UI 设计分析 section 内嵌截图（见下方 figure 组件规范）
+5. **告知用户文件路径**，询问是否需要调整分析深度或方向
 
 如果用户没指定具体产品，主动推荐 2-3 个最近值得分析的产品供选择。
