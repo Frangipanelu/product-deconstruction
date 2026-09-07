@@ -110,6 +110,8 @@ Skill 会自动：
 product-deconstruction/
 ├── SKILL.md                          # 主文件：执行流程+分析框架
 ├── README.md                         # 本文档
+├── scripts/
+│   └── capture-screenshots.js        # Playwright 网站截图脚本
 ├── references/
 │   ├── search-channels.md            # 搜索渠道矩阵+信息缺失规则
 │   ├── chart-catalog.md              # 图型映射+选型流程+视觉语法
