@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[产品名] 产品拆解报告</title>
+  <style>
+    :root {
+      --bg: #fafaf7;
+      --surface: #ffffff;
+      --ink: #0f1311;
+      --ink-soft: #2a312e;
+      --muted: #6b736f;
+      --line: #e7e6df;
+      --accent: #1a5f4a;
+      --accent-soft: #e9f3ee;
+      --warn: #b8550a;
+      --warn-soft: #fdf2e6;
+      --crit: #9b2c2c;
+      --crit-soft: #fbecec;
+      --highlight: #f4f1e8;
+      --hero-bg: #0f1311;
+      --hero-ink: #fafaf7;
+      --hero-accent: #6ac6a3;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, "SF Pro Text", "Inter", "Segoe UI", Roboto, sans-serif;
+      background: var(--bg); color: var(--ink); line-height: 1.65; font-size: 17px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 0 28px; }
+
+    /* ===== Hero 暗色头部 ===== */
+    .hero {
+      background: var(--hero-bg); color: var(--hero-ink);
+      padding: 64px 0 56px; border-bottom: 1px solid #1f2421;
+    }
+    .hero .tag {
+      font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--hero-accent); font-weight: 600; margin-bottom: 18px;
+    }
+    .hero h1 {
+      font-family: "Fraunces", "Georgia", serif;
+      font-size: 48px; line-height: 1.08; font-weight: 500;
+      letter-spacing: -0.02em; margin: 0 0 22px;
+    }
+    .hero h1 em { color: var(--hero-accent); font-style: italic; font-weight: 400; }
+    .hero .lede { font-size: 18px; color: #c8ccc9; max-width: 760px; margin: 0 0 36px; }
+
+    /* 关键数字栏 */
+    .keystats {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 16px; margin: 32px 0 28px;
+    }
+    .keystats .k { border-top: 2px solid var(--hero-accent); padding-top: 12px; }
+    .keystats .k .num {
+      font-family: "Fraunces", "Georgia", serif;
+      font-size: 28px; font-weight: 500; line-height: 1;
+    }
+    .keystats .k .lbl {
+      font-size: 12px; color: #9aa39e; margin-top: 6px;
+      text-transform: uppercase; letter-spacing: 0.08em;
+    }
+
+    /* TOC 导航 */
+    .toc {
+      display: flex; flex-wrap: wrap; gap: 8px 14px;
+      padding-top: 28px; border-top: 1px solid #1f2421;
+    }
+    .toc a { color: #9aa39e; text-decoration: none; font-size: 13px; }
+    .toc a:hover { color: var(--hero-accent); }
+
+    /* ===== 内容区 ===== */
+    section { padding: 56px 0; border-bottom: 1px solid var(--line); }
+    .section-num {
+      font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--accent); font-weight: 600;
+    }
+    h2 {
+      font-family: "Fraunces", "Georgia", serif;
+      font-size: 34px; line-height: 1.15; font-weight: 500;
+      letter-spacing: -0.015em; margin: 8px 0 24px; max-width: 820px;
+    }
+    h3 {
+      font-family: "Fraunces", "Georgia", serif;
+      font-size: 22px; line-height: 1.25; font-weight: 500;
+      margin: 36px 0 14px;
+    }
+    h4 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+    p { margin: 0 0 16px; color: var(--ink-soft); }
+    strong { color: var(--ink); font-weight: 600; }
+    a { color: var(--accent); }
+    .lede-p { font-size: 18px; line-height: 1.6; }
+
+    /* ===== 大数字卡片 ===== */
+    .big-stat {
+      background: var(--surface); border: 1px solid var(--line);
+      border-left: 4px solid var(--accent); padding: 22px 26px;
+      margin: 24px 0; border-radius: 4px;
+    }
+    .big-stat .num {
+      font-family: "Fraunces", "Georgia", serif;
+      font-size: 44px; line-height: 1; font-weight: 500;
+      color: var(--accent); margin-bottom: 8px;
+    }
+    .big-stat p { margin: 0; }
+    .big-stat .src { font-size: 13px; color: var(--muted); margin-top: 10px; }
+
+    /* ===== 统计网格 ===== */
+    .stat-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 1px; background: var(--line);
+      border: 1px solid var(--line); margin: 24px 0; border-radius: 4px; overflow: hidden;
+    }
+    .stat-grid .cell { background: var(--surface); padding: 20px 22px; }
+    .stat-grid .num {
+      font-family: "Fraunces", "Georgia", serif;
+      font-size: 30px; font-weight: 500; color: var(--ink);
+      line-height: 1; margin-bottom: 6px;
+    }
+    .stat-grid .lbl { font-size: 14px; color: var(--muted); }
+
+    /* ===== CSS 条形图 ===== */
+    .bar-list { margin: 20px 0; }
+    .bar-row {
+      display: grid; grid-template-columns: 200px 1fr 80px;
+      align-items: center; gap: 14px; padding: 8px 0;
+      border-bottom: 1px dotted var(--line);
+    }
+    .bar-row .name { font-size: 14px; }
+    .bar-row .bar { background: #ebe9e2; height: 8px; border-radius: 4px; overflow: hidden; }
+    .bar-row .bar > div { background: var(--accent); height: 100%; border-radius: 4px; }
+    .bar-row .val {
+      font-size: 14px; font-weight: 600; text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ===== 表格 ===== */
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 15px; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+    th {
+      background: var(--highlight); font-weight: 600; color: var(--ink);
+      font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    td.num { font-variant-numeric: tabular-nums; font-weight: 600; }
+
+    /* ===== 提示框 ===== */
+    .callout {
+      background: var(--accent-soft); border-left: 4px solid var(--accent);
+      padding: 20px 24px; margin: 24px 0; border-radius: 4px;
+    }
+    .callout.warn { background: var(--warn-soft); border-left-color: var(--warn); }
+    .callout.crit { background: var(--crit-soft); border-left-color: var(--crit); }
+    .callout .title {
+      font-weight: 700; font-size: 13px; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--accent); margin-bottom: 8px;
+    }
+    .callout.warn .title { color: var(--warn); }
+    .callout.crit .title { color: var(--crit); }
+    .callout p:last-child { margin-bottom: 0; }
+
+    /* ===== 双列卡片 ===== */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 20px 0; }
+    .col-card {
+      background: var(--surface); border: 1px solid var(--line);
+      padding: 20px 22px; border-radius: 4px;
+    }
+    .col-card h4 { margin: 0 0 10px; font-size: 15px; }
+    .col-card ul { padding-left: 16px; margin: 0; }
+    .col-card li { margin-bottom: 6px; color: var(--ink-soft); font-size: 14px; }
+
+    /* ===== 引语 ===== */
+    blockquote {
+      border-left: 3px solid var(--accent); padding: 4px 0 4px 22px;
+      margin: 24px 0; font-family: "Fraunces", "Georgia", serif;
+      font-size: 20px; font-style: italic; color: var(--ink); line-height: 1.45;
+    }
+    blockquote footer { font-size: 14px; font-style: normal; color: var(--muted); margin-top: 8px; }
+
+    /* ===== 来源标注 ===== */
+    .src-line { font-size: 13px; color: var(--muted); margin-top: -6px; margin-bottom: 20px; }
+    .src-line a { color: var(--muted); text-decoration: underline; }
+
+    /* ===== 分隔符 ===== */
+    .divider { text-align: center; padding: 40px 0; color: #9ca3af; letter-spacing: 0.5em; font-size: 14px; }
+
+    /* ===== 风险标签 ===== */
+    .risk-tag {
+      display: inline-block; font-size: 11px; font-weight: 600;
+      padding: 2px 8px; border-radius: 4px; margin-right: 6px;
+    }
+    .risk-tag.red { background: #fef2f2; color: #b91c1c; }
+    .risk-tag.yellow { background: #fffbeb; color: #b45309; }
+    .risk-list li { margin-bottom: 10px; }
+
+    /* ===== 评分 ===== */
+    .score-box {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent); color: #fff; padding: 6px 16px;
+      border-radius: 20px; font-size: 14px; font-weight: 700;
+    }
+
+    /* ===== SWOT ===== */
+    .swot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+    .swot-cell { padding: 18px; border-radius: 8px; font-size: 14px; }
+    .swot-cell h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+    .swot-cell ul { padding-left: 14px; margin: 0; }
+    .swot-cell li { margin-bottom: 4px; font-size: 13px; }
+    .swot-s { background: #ecfdf5; border: 1px solid #a7f3d0; }
+    .swot-s h4 { color: #047857; }
+    .swot-w { background: #fef2f2; border: 1px solid #fecaca; }
+    .swot-w h4 { color: #b91c1c; }
+    .swot-o { background: #eff6ff; border: 1px solid #bfdbfe; }
+    .swot-o h4 { color: #1d4ed8; }
+    .swot-t { background: #fffbeb; border: 1px solid #fde68a; }
+    .swot-t h4 { color: #b45309; }
+
+    /* ===== 响应式 ===== */
+    @media (max-width: 760px) {
+      .hero h1 { font-size: 34px; }
+      .hero .lede { font-size: 16px; }
+      .keystats { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      h2 { font-size: 26px; }
+      .stat-grid { grid-template-columns: 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+      .swot-grid { grid-template-columns: 1fr; }
+      .bar-row { grid-template-columns: 120px 1fr 60px; gap: 8px; font-size: 13px; }
+      section { padding: 40px 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Hero 暗色头部 ===== -->
+  <header class="hero">
+    <div class="wrap">
+      <div class="tag">Product Deep Dive · [热度标签]</div>
+      <h1>[产品名] <em>产品拆解报告</em></h1>
+      <p class="lede">分析日期：[日期] · 阅读时长：约 [N] 分钟 · 产品分级：<span class="score-box">[级别]</span></p>
+
+      <!-- 关键数字：填入 4-5 个核心指标 -->
+      <div class="keystats">
+        <div class="k"><div class="num">[数据1]</div><div class="lbl">[指标名]</div></div>
+        <div class="k"><div class="num">[数据2]</div><div class="lbl">[指标名]</div></div>
+        <div class="k"><div class="num">[数据3]</div><div class="lbl">[指标名]</div></div>
+        <div class="k"><div class="num">[数据4]</div><div class="lbl">[指标名]</div></div>
+      </div>
+
+      <!-- TOC 导航 -->
+      <nav class="toc">
+        <a href="#s1">01 [章节名]</a>
+        <a href="#s2">02 [章节名]</a>
+        <a href="#s3">03 [章节名]</a>
+        <a href="#s4">04 [章节名]</a>
+        <a href="#s5">05 [章节名]</a>
+        <a href="#s6">06 [章节名]</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== 章节模板 ===== -->
+  <!--
+    使用说明：
+    1. 每个章节用 <section id="sN"> 包裹
+    2. 章节编号用 .section-num
+    3. 数据可视化优先用 CSS 条形图（.bar-list），不用 SVG
+    4. 关键数据用 .big-stat 或 .stat-grid
+    5. 正反对比用 .two-col + .col-card
+    6. 重要洞察用 .callout（绿色）/ .callout.warn（黄色）/ .callout.crit（红色）
+    7. 每个图表/数据下方加 .src-line 标注来源
+    8. 章节间用 <div class="divider">✦ ✦ ✦</div> 分隔
+  -->
+
+  <!-- 示例：产品速览 -->
+  <section id="s1">
+    <div class="wrap">
+      <div class="section-num">01 — 产品速览</div>
+      <h2>[章节标题]</h2>
+
+      <p class="lede-p">一句话定位：<strong>[产品核心定位描述]</strong></p>
+
+      <!-- 大数字卡片：核心发现 -->
+      <div class="big-stat">
+        <div class="num">[核心数据]</div>
+        <p>[围绕这个数据的分析解读]</p>
+      </div>
+
+      <!-- 统计网格：4 个关键指标 -->
+      <div class="stat-grid">
+        <div class="cell"><div class="num">[数据]</div><div class="lbl">[指标说明]</div></div>
+        <div class="cell"><div class="num">[数据]</div><div class="lbl">[指标说明]</div></div>
+        <div class="cell"><div class="num">[数据]</div><div class="lbl">[指标说明]</div></div>
+        <div class="cell"><div class="num">[数据]</div><div class="lbl">[指标说明]</div></div>
+      </div>
+      <p class="src-line">来源：[数据来源]</p>
+    </div>
+  </section>
+
+  <div class="divider">✦ ✦ ✦</div>
+
+  <!-- 示例：功能拆解（含条形图） -->
+  <section id="s2">
+    <div class="wrap">
+      <div class="section-num">02 — 功能拆解</div>
+      <h2>[章节标题]</h2>
+
+      <h3>[子标题]</h3>
+
+      <!-- CSS 条形图：用于对比/排名 -->
+      <div class="bar-list">
+        <div class="bar-row"><div class="name">[项目A]</div><div class="bar"><div style="width:90%"></div></div><div class="val">[数值]</div></div>
+        <div class="bar-row"><div class="name">[项目B]</div><div class="bar"><div style="width:65%"></div></div><div class="val">[数值]</div></div>
+        <div class="bar-row"><div class="name">[项目C]</div><div class="bar"><div style="width:40%;background:var(--warn)"></div></div><div class="val">[数值]</div></div>
+      </div>
+      <p class="src-line">来源：[数据来源]</p>
+
+      <!-- 提示框：洞察 -->
+      <div class="callout">
+        <div class="title">★ 关键洞察</div>
+        <p>[洞察内容]</p>
+      </div>
+
+      <!-- 提示框：警告 -->
+      <div class="callout warn">
+        <div class="title">⚠ 风险提示</div>
+        <p>[风险内容]</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider">✦ ✦ ✦</div>
+
+  <!-- 示例：正反对比 -->
+  <section id="s3">
+    <div class="wrap">
+      <div class="section-num">03 — [章节名]</div>
+      <h2>[章节标题]</h2>
+
+      <!-- 双列卡片：正反对比 -->
+      <div class="two-col">
+        <div class="col-card">
+          <h4>🟢 优势/亮点</h4>
+          <ul>
+            <li>[要点1]</li>
+            <li>[要点2]</li>
+          </ul>
+        </div>
+        <div class="col-card">
+          <h4>🔴 劣势/风险</h4>
+          <ul>
+            <li>[要点1]</li>
+            <li>[要点2]</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 表格：竞品对比 -->
+      <table>
+        <thead>
+          <tr><th>维度</th><th>本产品</th><th>竞品A</th><th>竞品B</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>[维度]</strong></td><td class="num">[数据]</td><td class="num">[数据]</td><td class="num">[数据]</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="divider">✦ ✦ ✦</div>
+
+  <!-- 示例：SWOT + 评分 -->
+  <section id="s4">
+    <div class="wrap">
+      <div class="section-num">04 — SWOT + 评分</div>
+      <h2>综合评估</h2>
+
+      <div class="swot-grid">
+        <div class="swot-cell swot-s"><h4>Strengths 优势</h4><ul><li>[要点]</li></ul></div>
+        <div class="swot-cell swot-w"><h4>Weaknesses 劣势</h4><ul><li>[要点]</li></ul></div>
+        <div class="swot-cell swot-o"><h4>Opportunities 机会</h4><ul><li>[要点]</li></ul></div>
+        <div class="swot-cell swot-t"><h4>Threats 威胁</h4><ul><li>[要点]</li></ul></div>
+      </div>
+
+      <div class="big-stat">
+        <div class="num">[评分]</div>
+        <p>[评分解读和依据]</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 文末 -->
+  <section style="border-bottom:none;">
+    <div class="wrap">
+      <p style="font-size: 13px; color: var(--muted); text-align: center;">
+        数据来源声明：[声明内容] · 分析日期 [日期] · 本报告为独立分析，与任何产品方无利益关系。
+      </p>
+    </div>
+  </section>
+
+</body>
+</html>

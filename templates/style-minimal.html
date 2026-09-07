@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GrowthOS 产品拆解报告</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, system-ui, sans-serif;
+            background: #ffffff;
+            color: #111827;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        h1 {
+            font-family: "Courier New", "Consolas", monospace;
+            font-size: 28px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        h2 {
+            font-family: "Courier New", "Consolas", monospace;
+            font-size: 20px;
+            font-weight: 600;
+            color: #111827;
+            margin-top: 48px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #374151;
+            margin-top: 24px;
+            margin-bottom: 12px;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: #374151;
+        }
+
+        .metadata {
+            font-family: "Courier New", monospace;
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 32px;
+        }
+
+        .toc {
+            margin: 32px 0;
+            padding: 24px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+        }
+
+        .toc-title {
+            font-family: "Courier New", monospace;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .toc li {
+            margin-bottom: 6px;
+        }
+
+        .toc a {
+            color: #374151;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        .toc a::before {
+            content: "- ";
+            color: #6b7280;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0 24px 0;
+            font-size: 14px;
+        }
+
+        th {
+            background: #f3f4f6;
+            font-weight: 600;
+            text-align: left;
+            padding: 10px 12px;
+            border: 1px solid #e5e7eb;
+            color: #374151;
+        }
+
+        td {
+            padding: 10px 12px;
+            border: 1px solid #e5e7eb;
+            color: #374151;
+        }
+
+        tr:nth-child(even) td {
+            background: #f9fafb;
+        }
+
+        code {
+            font-family: "Courier New", monospace;
+            background: #f3f4f6;
+            padding: 2px 6px;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        pre {
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            padding: 16px;
+            margin: 16px 0 24px 0;
+            overflow-x: auto;
+            font-family: "Courier New", monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #374151;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .bar-chart {
+            margin: 16px 0 24px 0;
+        }
+
+        .bar-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .bar-label {
+            width: 140px;
+            font-size: 13px;
+            color: #374151;
+            flex-shrink: 0;
+        }
+
+        .bar-track {
+            flex: 1;
+            height: 20px;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: #374151;
+        }
+
+        .bar-value {
+            width: 50px;
+            text-align: right;
+            font-family: "Courier New", monospace;
+            font-size: 13px;
+            color: #6b7280;
+            margin-left: 8px;
+        }
+
+        .terminal {
+            background: #111827;
+            color: #d1d5db;
+            border-radius: 0;
+            padding: 16px;
+            margin: 16px 0 24px 0;
+            font-family: "Courier New", monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .terminal .prompt {
+            color: #6b7280;
+        }
+
+        .terminal .cmd {
+            color: #d1d5db;
+        }
+
+        .terminal .output {
+            color: #9ca3af;
+        }
+
+        .terminal .highlight {
+            color: #ffffff;
+        }
+
+        .swot-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            margin: 16px 0 24px 0;
+        }
+
+        .swot-cell {
+            border: 1px solid #e5e7eb;
+            padding: 16px;
+        }
+
+        .swot-cell h4 {
+            font-family: "Courier New", monospace;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .swot-cell ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .swot-cell li {
+            font-size: 14px;
+            color: #374151;
+            margin-bottom: 4px;
+            padding-left: 12px;
+            position: relative;
+        }
+
+        .swot-cell li::before {
+            content: "-";
+            position: absolute;
+            left: 0;
+            color: #6b7280;
+        }
+
+        .section {
+            margin-bottom: 48px;
+        }
+
+        .inline-code {
+            font-family: "Courier New", monospace;
+            background: #f3f4f6;
+            padding: 1px 5px;
+            font-size: 14px;
+        }
+
+        a {
+            color: #374151;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #e5e7eb;
+            margin: 48px 0;
+        }
+
+        .tag {
+            display: inline-block;
+            font-family: "Courier New", monospace;
+            font-size: 12px;
+            padding: 2px 8px;
+            border: 1px solid #e5e7eb;
+            color: #6b7280;
+            margin-right: 4px;
+        }
+
+        .score {
+            font-family: "Courier New", monospace;
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .score-label {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 24px 0;
+        }
+
+        .meta-item {
+            border: 1px solid #e5e7eb;
+            padding: 16px;
+        }
+
+        .meta-item .label {
+            font-size: 12px;
+            color: #6b7280;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .meta-item .value {
+            font-family: "Courier New", monospace;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        .feature-list {
+            margin: 16px 0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .feature-item::before {
+            content: ">";
+            font-family: "Courier New", monospace;
+            color: #6b7280;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+
+        .footnote {
+            font-size: 13px;
+            color: #6b7280;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 24px;
+            margin-top: 48px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1># GrowthOS 产品拆解报告</h1>
+        <p class="metadata">分析日期：2026-09-07 | 产品分级：B+ | 分析师：AI Research</p>
+
+        <div class="toc">
+            <div class="toc-title">目录</div>
+            <ul>
+                <li><a href="#overview">产品概述</a></li>
+                <li><a href="#architecture">技术架构</a></li>
+                <li><a href="#features">核心功能</a></li>
+                <li><a href="#market">市场定位</a></li>
+                <li><a href="#metrics">关键指标</a></li>
+                <li><a href="#swot">SWOT 分析</a></li>
+                <li><a href="#verdict">结论</a></li>
+            </ul>
+        </div>
+
+        <div class="section" id="overview">
+            <h2># 产品概述</h2>
+            <p>GrowthOS 是一个开源的 MCP (Model Context Protocol) 分析服务器，为 AI 应用提供行为追踪、性能监控和成本分析能力。项目采用 Apache 2.0 许可证，目前处于 v0.9.2 版本。</p>
+
+            <div class="meta-grid">
+                <div class="meta-item">
+                    <div class="label">类型</div>
+                    <div class="value">MCP Server</div>
+                </div>
+                <div class="meta-item">
+                    <div class="label">语言</div>
+                    <div class="value">TypeScript</div>
+                </div>
+                <div class="meta-item">
+                    <div class="label">Stars</div>
+                    <div class="value">2,847</div>
+                </div>
+                <div class="meta-item">
+                    <div class="label">协议</div>
+                    <div class="value">Apache 2.0</div>
+                </div>
+                <div class="meta-item">
+                    <div class="label">npm</div>
+                    <div class="value">12.4k/周</div>
+                </div>
+                <div class="meta-item">
+                    <div class="label">版本</div>
+                    <div class="value">v0.9.2</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="architecture">
+            <h2># 技术架构</h2>
+            <p>GrowthOS 采用事件驱动的微服务架构，核心组件通过 MCP 协议与 AI 客户端通信。</p>
+
+            <pre><code>┌─────────────────────────────────────────────────────────┐
+│                    MCP Client (AI App)                   │
+└───────────────────────────┬─────────────────────────────┘
+                            │ MCP Protocol (JSON-RPC)
+                            ▼
+┌─────────────────────────────────────────────────────────┐
+│                   GrowthOS Server                       │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
+│  │  Event       │  │  Query       │  │  Alert       │  │
+│  │  Collector   │  │  Engine      │  │  Manager     │  │
+│  └──────────────┘  └──────────────┘  └──────────────┘  │
+└───────────────────────────┬─────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────┐
+│              Storage (SQLite / Postgres)                 │
+└─────────────────────────────────────────────────────────┘</code></pre>
+
+            <h3>依赖栈</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>层级</th>
+                        <th>技术选型</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>运行时</td>
+                        <td>Node.js 20+</td>
+                        <td>使用 ESM 模块系统</td>
+                    </tr>
+                    <tr>
+                        <td>协议</td>
+                        <td>@modelcontextprotocol/sdk</td>
+                        <td>官方 MCP TypeScript SDK</td>
+                    </tr>
+                    <tr>
+                        <td>存储</td>
+                        <td>better-sqlite3 / pg</td>
+                        <td>可切换 SQLite 或 PostgreSQL</td>
+                    </tr>
+                    <tr>
+                        <td>序列化</td>
+                        <td>zod</td>
+                        <td>运行时类型验证</td>
+                    </tr>
+                    <tr>
+                        <td>打包</td>
+                        <td>tsup</td>
+                        <td>ESM + CJS 双格式输出</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section" id="features">
+            <h2># 核心功能</h2>
+            <p>GrowthOS 提供三个主要工具（Tools），均通过 MCP 协议暴露给 AI 客户端。</p>
+
+            <h3>工具清单</h3>
+            <div class="feature-list">
+                <div class="feature-item"><code>track_event</code> — 记录用户行为事件，支持自定义属性和自动会话关联</div>
+                <div class="feature-item"><code>query_metrics</code> — 查询聚合指标，支持时间范围、分组和过滤条件</div>
+                <div class="feature-item"><code>create_alert</code> — 创建阈值告警，支持费用、延迟、错误率等指标</div>
+            </div>
+
+            <h3>事件数据结构</h3>
+            <pre><code>{
+  "event": "api_call",
+  "user_id": "usr_abc123",
+  "properties": {
+    "model": "claude-3-opus",
+    "tokens_in": 1250,
+    "tokens_out": 890,
+    "latency_ms": 2340,
+    "cost_usd": 0.089
+  },
+  "timestamp": "2026-09-07T14:30:00Z"
+}</code></pre>
+
+            <h3>查询示例</h3>
+            <pre><code>// 查询过去 7 天的每日 API 调用量和费用
+const result = await client.callTool({
+  name: "query_metrics",
+  arguments: {
+    metric: "api_call",
+    group_by: "day",
+    range: "7d",
+    aggregations: ["count", "sum:cost_usd"]
+  }
+});</code></pre>
+
+            <h3>MCP Resources</h3>
+            <p>除工具外，GrowthOS 还暴露两个只读资源供 AI 读取上下文：</p>
+            <div class="feature-list">
+                <div class="feature-item"><code>growthos://dashboard/summary</code> — 当日概览数据</div>
+                <div class="feature-item"><code>growthos://config/alerts</code> — 当前活跃告警列表</div>
+            </div>
+        </div>
+
+        <div class="section" id="market">
+            <h2># 市场定位</h2>
+            <p>GrowthOS 定位于 AI 应用的可观测性层，直接竞品较少，主要与通用 MCP 服务器和传统 APM 工具形成竞争。</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>产品</th>
+                        <th>类型</th>
+                        <th>MCP 原生</th>
+                        <th>开源</th>
+                        <th>定价</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>GrowthOS</td>
+                        <td>MCP 分析服务器</td>
+                        <td>是</td>
+                        <td>是</td>
+                        <td>免费 + 云托管</td>
+                    </tr>
+                    <tr>
+                        <td>Langfuse</td>
+                        <td>LLM 可观测平台</td>
+                        <td>插件支持</td>
+                        <td>是</td>
+                        <td>免费 + 付费</td>
+                    </tr>
+                    <tr>
+                        <td>Helicone</td>
+                        <td>LLM 代理网关</td>
+                        <td>否</td>
+                        <td>部分</td>
+                        <td>免费额度 + 付费</td>
+                    </tr>
+                    <tr>
+                        <td>Portkey</td>
+                        <td>AI 网关</td>
+                        <td>否</td>
+                        <td>是</td>
+                        <td>免费 + 企业</td>
+                    </tr>
+                    <tr>
+                        <td>Datadog</td>
+                        <td>通用 APM</td>
+                        <td>否</td>
+                        <td>否</td>
+                        <td>按主机计费</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>目标用户画像</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>用户类型</th>
+                        <th>场景</th>
+                        <th>优先级</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>AI 应用开发者</td>
+                        <td>调试 prompt、追踪 token 消耗</td>
+                        <td>P0</td>
+                    </tr>
+                    <tr>
+                        <td>平台团队</td>
+                        <td>多租户成本核算、SLA 监控</td>
+                        <td>P1</td>
+                    </tr>
+                    <tr>
+                        <td>产品经理</td>
+                        <td>AI 功能使用率分析</td>
+                        <td>P2</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section" id="metrics">
+            <h2># 关键指标</h2>
+            <p>以下数据基于 GitHub 仓库和 npm registry 公开信息。</p>
+
+            <h3>社区活跃度</h3>
+            <div class="bar-chart">
+                <div class="bar-row">
+                    <div class="bar-label">GitHub Stars</div>
+                    <div class="bar-track"><div class="bar-fill" style="width: 71%;"></div></div>
+                    <div class="bar-value">2,847</div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label">Forks</div>
+                    <div class="bar-track"><div class="bar-fill" style="width: 34%;"></div></div>
+                    <div class="bar-value">389</div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label">npm 周下载</div>
+                    <div class="bar-track"><div class="bar-fill" style="width: 62%;"></div></div>
+                    <div class="bar-value">12.4k</div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label">Contributors</div>
+                    <div class="bar-track"><div class="bar-fill" style="width: 28%;"></div></div>
+                    <div class="bar-value">47</div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label">Open Issues</div>
+                    <div class="bar-track"><div class="bar-fill" style="width: 15%;"></div></div>
+                    <div class="bar-value">23</div>
+                </div>
+            </div>
+
+            <h3>版本发布节奏</h3>
+            <div class="terminal">
+                <div><span class="prompt">$</span> <span class="cmd">npm view growthos-mcp-server time --json | jq 'keys | length'</span></div>
+                <div><span class="output">34</span></div>
+                <div></div>
+                <div><span class="prompt">$</span> <span class="cmd">npm view growthos-mcp-server time | jq '.["0.9.2"], .["0.8.0"], .["0.7.0"]'</span></div>
+                <div><span class="output">"2026-08-28T10:00:00.000Z"</span></div>
+                <div><span class="output">"2026-07-15T09:30:00.000Z"</span></div>
+                <div><span class="output">"2026-06-02T11:00:00.000Z"</span></div>
+            </div>
+
+            <h3>性能基准</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>指标</th>
+                        <th>P50</th>
+                        <th>P95</th>
+                        <th>P99</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>事件写入延迟</td>
+                        <td>3ms</td>
+                        <td>12ms</td>
+                        <td>28ms</td>
+                    </tr>
+                    <tr>
+                        <td>查询响应时间</td>
+                        <td>18ms</td>
+                        <td>89ms</td>
+                        <td>210ms</td>
+                    </tr>
+                    <tr>
+                        <td>内存占用 (空载)</td>
+                        <td>—</td>
+                        <td>—</td>
+                        <td>45MB</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section" id="swot">
+            <h2># SWOT 分析</h2>
+
+            <div class="swot-grid">
+                <div class="swot-cell">
+                    <h4>Strengths (优势)</h4>
+                    <ul>
+                        <li>MCP 协议原生支持，开箱即用</li>
+                        <li>轻量级，SQLite 模式零依赖部署</li>
+                        <li>TypeScript 全栈，类型安全</li>
+                        <li>Apache 2.0 许可，企业友好</li>
+                    </ul>
+                </div>
+                <div class="swot-cell">
+                    <h4>Weaknesses (劣势)</h4>
+                    <ul>
+                        <li>v0.x 版本，API 稳定性未保证</li>
+                        <li>文档覆盖率不足，示例较少</li>
+                        <li>无官方 SDK，客户端需手动构建</li>
+                        <li>存储层未支持 ClickHouse 等 OLAP</li>
+                    </ul>
+                </div>
+                <div class="swot-cell">
+                    <h4>Opportunities (机会)</h4>
+                    <ul>
+                        <li>MCP 生态快速增长，先发优势明显</li>
+                        <li>AI 应用可观测性需求爆发</li>
+                        <li>可扩展为 AI Agent 编排平台</li>
+                        <li>与 LangChain/LlamaIndex 集成</li>
+                    </ul>
+                </div>
+                <div class="swot-cell">
+                    <h4>Threats (威胁)</h4>
+                    <ul>
+                        <li>大型厂商自建内部方案</li>
+                        <li>Langfuse 等项目增加 MCP 支持</li>
+                        <li>MCP 协议标准可能变更</li>
+                        <li>数据隐私法规趋严</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="verdict">
+            <h2># 结论</h2>
+
+            <p>GrowthOS 在 MCP 可观测性赛道占据先发位置，产品完成度较高，技术选型务实。核心风险在于 v0.x 阶段的 API 稳定性和生态护城河深度。</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>维度</th>
+                        <th>评分 (1-10)</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>产品完整度</td>
+                        <td><span class="score">7</span></td>
+                        <td>核心功能可用，文档和示例待完善</td>
+                    </tr>
+                    <tr>
+                        <td>技术架构</td>
+                        <td><span class="score">8</span></td>
+                        <td>清晰的分层设计，扩展性好</td>
+                    </tr>
+                    <tr>
+                        <td>社区活跃度</td>
+                        <td><span class="score">6</span></td>
+                        <td>增长趋势明显，但贡献者集中</td>
+                    </tr>
+                    <tr>
+                        <td>市场时机</td>
+                        <td><span class="score">8</span></td>
+                        <td>MCP 生态早期，窗口期约 12-18 个月</td>
+                    </tr>
+                    <tr>
+                        <td>竞争壁垒</td>
+                        <td><span class="score">5</span></td>
+                        <td>技术门槛中等，需快速建立生态</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>建议动作</h3>
+            <div class="feature-list">
+                <div class="feature-item">关注 v1.0 版本发布，评估 API 稳定性承诺</div>
+                <div class="feature-item">测试 SQLite → PostgreSQL 迁移路径的可靠性</div>
+                <div class="feature-item">评估与现有 LLM 可观测方案的集成成本</div>
+                <div class="feature-item">关注 MCP 协议演进对工具接口的影响</div>
+            </div>
+        </div>
+
+        <div class="footnote">
+            <p>本报告基于公开信息分析，不构成投资建议。数据截止 2026-09-07。</p>
+            <p>生成方式：<code>opencode --skill product-deconstruction</code></p>
+        </div>
+    </div>
+</body>
+</html>

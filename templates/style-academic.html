@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GrowthOS 产品拆解报告 — 学术数据风格</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #fafaf7;
+    --text: #0f1311;
+    --primary: #1a5f4a;
+    --secondary: #6ac6a3;
+    --accent-light: #e8f5ef;
+    --accent-mid: #d0ead8;
+    --border: #d4d8d2;
+    --hero-bg: #0f1311;
+    --hero-text: #e8f5ef;
+    --callout-bg: #f0f4ee;
+    --warn-bg: #fef7e8;
+    --warn-border: #d4a017;
+    --swot-green: #e8f5ef;
+    --swot-blue: #eef4f8;
+    --swot-yellow: #fef7e8;
+    --swot-red: #fdf0ef;
+    --radius: 4px;
+    --font-title: Georgia, "Noto Serif SC", "Source Han Serif SC", serif;
+    --font-body: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--hero-bg);
+    color: var(--hero-text);
+    padding: 56px 40px 48px;
+    position: relative;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary), var(--primary));
+  }
+  .hero-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--secondary);
+    border: 1px solid rgba(106,198,163,0.35);
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+    font-family: var(--font-body);
+  }
+  .hero h1 {
+    font-family: var(--font-title);
+    font-size: 2.6rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .hero-sub {
+    font-size: 1rem;
+    color: rgba(232,245,239,0.6);
+    margin-bottom: 36px;
+  }
+  .keystats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: rgba(232,245,239,0.15);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .keystat {
+    background: rgba(255,255,255,0.04);
+    padding: 20px 24px;
+    text-align: center;
+  }
+  .keystat-value {
+    font-family: var(--font-title);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--secondary);
+    line-height: 1;
+  }
+  .keystat-label {
+    font-size: 0.75rem;
+    color: rgba(232,245,239,0.5);
+    margin-top: 6px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Container ── */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ── Section Numbering ── */
+  .section-num {
+    display: block;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--primary);
+    font-variant: small-caps;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .section-num::after {
+    content: ' —';
+  }
+
+  section {
+    padding: 48px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  section:last-child { border-bottom: none; }
+
+  section h2 {
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.3;
+  }
+
+  /* ── Stat Grid ── */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 24px 0;
+  }
+  .stat-cell {
+    background: var(--bg);
+    padding: 20px 24px;
+  }
+  .stat-cell-label {
+    font-size: 0.75rem;
+    color: #6b726a;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .stat-cell-value {
+    font-family: var(--font-title);
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  .stat-cell-desc {
+    font-size: 0.82rem;
+    color: #555;
+    margin-top: 4px;
+  }
+
+  /* ── Tables ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 0.88rem;
+  }
+  thead th {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 2px solid var(--primary);
+    font-weight: 600;
+    color: var(--primary);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  tbody td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--accent-light); }
+
+  /* ── Blockquote ── */
+  blockquote {
+    border-left: 3px solid var(--primary);
+    padding: 16px 20px;
+    margin: 20px 0;
+    background: var(--accent-light);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #1a3a2e;
+  }
+  blockquote strong { color: var(--primary); }
+
+  /* ── Bar List Charts ── */
+  .bar-list { margin: 20px 0; }
+  .bar-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .bar-label {
+    width: 140px;
+    flex-shrink: 0;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text);
+    padding-right: 12px;
+    text-align: right;
+  }
+  .bar-track {
+    flex: 1;
+    height: 28px;
+    background: var(--accent-light);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.6s ease;
+  }
+  .bar-fill.g1 { background: var(--primary); }
+  .bar-fill.g2 { background: #2d8a6a; }
+  .bar-fill.g3 { background: #45a882; }
+  .bar-fill.g4 { background: var(--secondary); }
+  .bar-fill.g5 { background: #8fd4b8; }
+  .bar-value {
+    margin-left: 10px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #555;
+    min-width: 36px;
+  }
+
+  /* ── Source Line ── */
+  .src-line {
+    font-size: 0.7rem;
+    color: #999;
+    margin-top: 6px;
+    font-style: italic;
+    padding-left: 152px;
+  }
+  .src-line::before {
+    content: '📎 ';
+  }
+
+  /* ── Big Stat ── */
+  .big-stat {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 24px;
+    background: var(--accent-light);
+    border-left: 4px solid var(--primary);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    margin: 20px 0;
+  }
+  .big-stat-num {
+    font-family: var(--font-title);
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .big-stat-text {
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: #333;
+  }
+
+  /* ── Callout ── */
+  .callout {
+    padding: 16px 20px;
+    border-radius: var(--radius);
+    margin: 20px 0;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    background: var(--callout-bg);
+    border: 1px solid var(--accent-mid);
+  }
+  .callout.warn {
+    background: var(--warn-bg);
+    border-color: var(--warn-border);
+  }
+  .callout-title {
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ── Two Column / Col Card ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+  .col-card {
+    padding: 20px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: #fff;
+  }
+  .col-card h4 {
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--primary);
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .col-card ul { list-style: none; padding: 0; }
+  .col-card li {
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+  .col-card li:last-child { border-bottom: none; }
+
+  /* ── SWOT Grid ── */
+  .swot-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .swot-cell {
+    padding: 20px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+  .swot-cell h4 {
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .swot-cell ul { list-style: none; padding: 0; }
+  .swot-cell li {
+    padding: 4px 0;
+    font-size: 0.84rem;
+    line-height: 1.5;
+  }
+  .swot-cell li::before {
+    content: '· ';
+    color: inherit;
+    font-weight: 700;
+  }
+  .swot-s { background: var(--swot-green); }
+  .swot-s h4 { color: #1a5f4a; }
+  .swot-w { background: var(--swot-blue); }
+  .swot-w h4 { color: #2c5a7c; }
+  .swot-o { background: var(--swot-yellow); }
+  .swot-o h4 { color: #8a6d1b; }
+  .swot-t { background: var(--swot-red); }
+  .swot-t h4 { color: #8a3a2e; }
+
+  /* ── Score Box ── */
+  .score-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 24px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: var(--radius);
+    margin: 16px 0;
+  }
+  .score-grade {
+    font-family: var(--font-title);
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .score-label {
+    font-size: 0.78rem;
+    opacity: 0.8;
+    line-height: 1.3;
+  }
+
+  /* ── Footer ── */
+  .report-footer {
+    text-align: center;
+    padding: 40px 32px;
+    font-size: 0.75rem;
+    color: #999;
+    border-top: 1px solid var(--border);
+  }
+  .report-footer span { color: var(--primary); font-weight: 600; }
+
+  /* ── Responsive ── */
+  @media (max-width: 680px) {
+    .hero { padding: 36px 20px 32px; }
+    .hero h1 { font-size: 1.8rem; }
+    .keystats { grid-template-columns: 1fr 1fr; }
+    .container { padding: 0 16px; }
+    .stat-grid { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+    .swot-grid { grid-template-columns: 1fr; }
+    .bar-label { width: 100px; font-size: 0.75rem; }
+    .src-line { padding-left: 0; }
+    .big-stat { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════ HERO ════════════════════════════════════════════ -->
+<header class="hero">
+  <div class="container">
+    <span class="hero-tag">Product Deep Dive · 开源 MCP 分析工具</span>
+    <h1>GrowthOS 产品拆解报告</h1>
+    <p class="hero-sub">基于 GitHub 开源仓库数据，系统拆解 MCP 协议生态中的分析层工具</p>
+    <div class="keystats">
+      <div class="keystat">
+        <div class="keystat-value">49</div>
+        <div class="keystat-label">MCP Tools</div>
+      </div>
+      <div class="keystat">
+        <div class="keystat-value">25</div>
+        <div class="keystat-label">GitHub Stars</div>
+      </div>
+      <div class="keystat">
+        <div class="keystat-value">7</div>
+        <div class="keystat-label">Commits</div>
+      </div>
+      <div class="keystat">
+        <div class="keystat-value">MIT</div>
+        <div class="keystat-label">License</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ════════════════════════════════════ 01 产品速览 ════════════════════════════════════ -->
+  <section id="overview">
+    <span class="section-num">01 — 产品速览</span>
+    <h2>产品速览</h2>
+    <p>GrowthOS 是一款面向 <strong>MCP（Model Context Protocol）</strong>生态的开源数据分析服务器，为 AI Agent 提供标准化的业务数据查询与指标追踪能力，使 LLM 能像使用工具一样访问增长数据。</p>
+
+    <div class="stat-grid">
+      <div class="stat-cell">
+        <div class="stat-cell-label">协议支持</div>
+        <div class="stat-cell-value">MCP v1.0</div>
+        <div class="stat-cell-desc">完整支持 Server-Sent Events 传输</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-cell-label">工具数量</div>
+        <div class="stat-cell-value">49 Tools</div>
+        <div class="stat-cell-desc">覆盖分析、归因、实验三大模块</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-cell-label">开发成熟度</div>
+        <div class="stat-cell-value">7 Commits</div>
+        <div class="stat-cell-desc">早期原型阶段，API 快速迭代</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-cell-label">社区反馈</div>
+        <div class="stat-cell-value">25 Stars</div>
+        <div class="stat-cell-desc">初步获得开发者关注</div>
+      </div>
+    </div>
+
+    <div class="src-line">数据来源：GitHub 仓库公开信息，截至 2026 年 9 月</div>
+  </section>
+
+  <!-- ════════════════════════════════════ 02 JTBD 分析 ════════════════════════════════════ -->
+  <section id="jtbd">
+    <span class="section-num">02 — JTBD 分析</span>
+    <h2>JTBD 分析</h2>
+    <blockquote>
+      <strong>核心任务：</strong>作为一名增长工程师，我需要让 AI Agent 能够<strong>直接查询生产环境的业务指标</strong>，以便在自动化工作流中做出数据驱动的决策，而无需人工手动导出报表。
+    </blockquote>
+
+    <table>
+      <thead>
+        <tr>
+          <th>待办任务（JTBD）</th>
+          <th>触发场景</th>
+          <th>期望结果</th>
+          <th>GrowthOS 覆盖</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>查询实时业务指标</td>
+          <td>Agent 执行增长实验时需要基线数据</td>
+          <td>毫秒级返回结构化指标</td>
+          <td>✅ 完整覆盖</td>
+        </tr>
+        <tr>
+          <td>执行归因分析</td>
+          <td>渠道投放效果评估</td>
+          <td>多触点归因模型结果</td>
+          <td>✅ 完整覆盖</td>
+        </tr>
+        <tr>
+          <td>管理 A/B 实验</td>
+          <td>新功能上线前的显著性验证</td>
+          <td>实验配置与结果查询</td>
+          <td>⚠️ 部分覆盖</td>
+        </tr>
+        <tr>
+          <td>生成数据报告</td>
+          <td>周会 / 月度复盘材料准备</td>
+          <td>自动汇总关键指标趋势</td>
+          <td>❌ 待实现</td>
+        </tr>
+        <tr>
+          <td>异常检测与告警</td>
+          <td>核心指标波动触发通知</td>
+          <td>主动推送异常信号</td>
+          <td>❌ 待实现</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="src-line">分析方法：基于 Jobs-to-Be-Done 框架，结合仓库 README 及 PR 记录归纳</div>
+  </section>
+
+  <!-- ════════════════════════════════════ 03 功能拆解 ════════════════════════════════════ -->
+  <section id="features">
+    <span class="section-num">03 — 功能拆解</span>
+    <h2>功能拆解</h2>
+    <p>按工具数量分布，GrowthOS 的 49 个 MCP Tools 可拆解为以下五大功能模块：</p>
+
+    <div class="bar-list">
+      <div class="bar-row">
+        <span class="bar-label">指标查询</span>
+        <div class="bar-track"><div class="bar-fill g1" style="width:82%"></div></div>
+        <span class="bar-value">18</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">归因分析</span>
+        <div class="bar-track"><div class="bar-fill g2" style="width:64%"></div></div>
+        <span class="bar-value">14</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">实验管理</span>
+        <div class="bar-track"><div class="bar-fill g3" style="width:36%"></div></div>
+        <span class="bar-value">8</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">用户分群</span>
+        <div class="bar-track"><div class="bar-fill g4" style="width:23%"></div></div>
+        <span class="bar-value">5</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">数据源管理</span>
+        <div class="bar-track"><div class="bar-fill g5" style="width:18%"></div></div>
+        <span class="bar-value">4</span>
+      </div>
+    </div>
+    <div class="src-line">工具分类基于仓库 src/tools/ 目录结构统计</div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>功能模块</th>
+          <th>核心 Tool 示例</th>
+          <th>输入参数</th>
+          <th>输出格式</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>指标查询</strong></td>
+          <td><code>get_metric</code>, <code>query_funnel</code>, <code>trend_analysis</code></td>
+          <td>metric_name, date_range, filters</td>
+          <td>JSON 结构化数据</td>
+        </tr>
+        <tr>
+          <td><strong>归因分析</strong></td>
+          <td><code>multi_touch_attribution</code>, <code>channel_mix</code></td>
+          <td>user_id, conversion_event, model_type</td>
+          <td>归因权重 + 贡献度</td>
+        </tr>
+        <tr>
+          <td><strong>实验管理</strong></td>
+          <td><code>list_experiments</code>, <code>get_experiment_result</code></td>
+          <td>experiment_id, variant</td>
+          <td>显著性 p-value + lift</td>
+        </tr>
+        <tr>
+          <td><strong>用户分群</strong></td>
+          <td><code>create_cohort</code>, <code>segment_overlap</code></td>
+          <td>segment_rules, time_window</td>
+          <td>用户 ID 列表 + 统计</td>
+        </tr>
+        <tr>
+          <td><strong>数据源管理</strong></td>
+          <td><code>list_datasources</code>, <code>schema_info</code></td>
+          <td>datasource_id</td>
+          <td>Schema 元数据</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <div class="callout-title">💡 设计亮点</div>
+      所有 Tool 均遵循 <strong>无状态设计</strong>——参数即查询，不持有会话状态。这使得 Agent 可以在任意上下文中自由组合调用，无需担心状态同步问题，天然适合多步推理工作流。
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-title">⚠️ 当前限制</div>
+      实验管理模块尚不支持<strong>样本量计算</strong>和<strong>实验互斥组配置</strong>，复杂实验场景仍需回退到传统平台操作。
+    </div>
+
+    <div class="src-line">功能分析基于 PR #3 — feat: add core tool implementations</div>
+  </section>
+
+  <!-- ════════════════════════════════════ 04 竞争格局 ════════════════════════════════════ -->
+  <section id="competition">
+    <span class="section-num">04 — 竞争格局</span>
+    <h2>竞争格局</h2>
+    <p>在 MCP 协议生态的分析工具赛道，GrowthOS 目前处于<strong>早期差异化定位</strong>阶段。以下是与主要竞品的横向对比：</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>维度</th>
+          <th>GrowthOS</th>
+          <th>PostHog MCP</th>
+          <th>Amplitude MCP</th>
+          <th>自研方案</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>开源</strong></td>
+          <td>✅ MIT</td>
+          <td>✅ MIT</td>
+          <td>❌ 闭源</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><strong>MCP 工具数</strong></td>
+          <td>49</td>
+          <td>32</td>
+          <td>18</td>
+          <td>自定义</td>
+        </tr>
+        <tr>
+          <td><strong>归因能力</strong></td>
+          <td>多触点 + Markov</td>
+          <td>基础归因</td>
+          <td>高级归因</td>
+          <td>取决于实现</td>
+        </tr>
+        <tr>
+          <td><strong>社区活跃度</strong></td>
+          <td>25 ★ / 早期</td>
+          <td>1.2k ★ / 活跃</td>
+          <td>—</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><strong>上手成本</strong></td>
+          <td>中等</td>
+          <td>低</td>
+          <td>低</td>
+          <td>高</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="big-stat">
+      <div class="big-stat-num">3×</div>
+      <div class="big-stat-text">GrowthOS 的 MCP 工具数量是 PostHog 方案的 <strong>1.5 倍</strong>、Amplitude 方案的 <strong>2.7 倍</strong>，在分析深度上形成显著差异化。但社区成熟度仍有较大差距。</div>
+    </div>
+
+    <div class="src-line">竞品数据截至 2026 年 9 月，来源为各产品官方文档及 GitHub 仓库</div>
+  </section>
+
+  <!-- ════════════════════════════════════ 05 SWOT + 评分 ════════════════════════════════════ -->
+  <section id="swot">
+    <span class="section-num">05 — SWOT + 评分</span>
+    <h2>SWOT 分析与综合评分</h2>
+
+    <div class="swot-grid">
+      <div class="swot-cell swot-s">
+        <h4>S — 优势</h4>
+        <ul>
+          <li>工具数量领先，覆盖归因+实验+分群全链路</li>
+          <li>MIT 开源，无厂商锁定风险</li>
+          <li>无状态设计，天然适配 Agent 工作流</li>
+          <li>专注 MCP 协议，技术栈现代</li>
+        </ul>
+      </div>
+      <div class="swot-cell swot-w">
+        <h4>W — 劣势</h4>
+        <ul>
+          <li>项目极早期（7 commits），稳定性未经验证</li>
+          <li>社区规模小（25 Stars），生态影响力有限</li>
+          <li>缺乏企业级安全与权限控制</li>
+          <li>文档与示例覆盖度不足</li>
+        </ul>
+      </div>
+      <div class="swot-cell swot-o">
+        <h4>O — 机会</h4>
+        <ul>
+          <li>MCP 协议生态爆发，工具层需求激增</li>
+          <li>企业 AI Agent 落地需要数据分析能力</li>
+          <li>可与 LangChain / CrewAI 等框架深度集成</li>
+          <li>数据隐私合规场景下的自托管需求</li>
+        </ul>
+      </div>
+      <div class="swot-cell swot-t">
+        <h4>T — 威胁</h4>
+        <ul>
+          <li>PostHog 等成熟产品的 MCP 扩展快速迭代</li>
+          <li>MCP 协议标准本身仍在演进，兼容性风险</li>
+          <li>大厂可能推出闭源竞品挤压空间</li>
+          <li>开源项目维护者精力有限</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="margin-top:32px; margin-bottom:12px;">综合评分</h3>
+
+    <div class="two-col">
+      <div class="col-card">
+        <h4>能力维度</h4>
+        <ul>
+          <li><strong>功能完整度</strong> — ★★★★☆</li>
+          <li><strong>技术架构</strong> — ★★★★★</li>
+          <li><strong>文档质量</strong> — ★★☆☆☆</li>
+          <li><strong>社区生态</strong> — ★★☆☆☆</li>
+          <li><strong>企业就绪度</strong> — ★★☆☆☆</li>
+        </ul>
+      </div>
+      <div class="col-card">
+        <h4>评估说明</h4>
+        <ul>
+          <li>功能覆盖面在同类工具中领先</li>
+          <li>无状态 MCP 设计具有前瞻性</li>
+          <li>README 覆盖基础用法，缺乏深度指南</li>
+          <li>早期阶段，贡献者与用户基数待增长</li>
+          <li>缺少 RBAC、审计日志等企业特性</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="score-box">
+      <div class="score-grade">B+</div>
+      <div class="score-label">综合评级<br><span style="opacity:0.7">潜力显著，需持续观察社区与迭代节奏</span></div>
+    </div>
+
+    <div class="src-line">评分基于功能覆盖、架构设计、社区活跃度、文档质量、企业特性五维度加权</div>
+  </section>
+
+</main>
+
+<!-- ════════════════════════════════════ Footer ════════════════════════════════════ -->
+<footer class="report-footer">
+  <p><span>GrowthOS</span> 产品拆解报告 · 学术数据风格 · 基于公开仓库数据</p>
+  <p style="margin-top:4px;">Generated with 📐 Data-Driven Analysis Framework · 2026</p>
+</footer>
+
+</body>
+</html>
