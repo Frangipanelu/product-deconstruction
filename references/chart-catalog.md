@@ -1,6 +1,8 @@
 # 图型目录 · 产品分析常用映射
 
-图表选型遵循**数据形状驱动**原则：先看数据长什么样，再选图型。参考 lieflat-charts 的 64 张图型目录。
+图表选型遵循**数据形状驱动**原则：先看数据长什么样，再选图型。图型目录改编自 lieflat-charts（[lieflat-charts](https://github.com/larashero3-dotcom/lieflat-charts) 的 64 张图型目录）。
+
+> **来源与许可**：本文档的图型编号与视觉语法参考改编自 **lieflat-charts**（moxt.ai 出品，https://github.com/larashero3-dotcom/lieflat-charts ），其采用 **PolyForm Noncommercial 1.0** 许可（非商业使用合规）。报告中的图形实现均为本 skill 自行手写 SVG，未复制原仓库代码；非商业用途已标注来源，如需商用请自行评估或重写相关表述。
 
 ## 产品分析常用图型映射
 

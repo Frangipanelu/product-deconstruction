@@ -3,7 +3,7 @@
 对互联网/AI产品进行系统性拆解分析，输出完整HTML图文报告。
 
 ![License](https://img.shields.io/badge/license-MIT-blue)
-![Version](https://img.shields.io/badge/version-1.0-green)
+![Version](https://img.shields.io/badge/version-3.0-green)
 
 ## ✦ 这是什么
 
@@ -34,16 +34,22 @@
 - **B级**：小团队/工具型产品 → 轻量分析
 - **C级**：已关停/衰退 → 死亡原因分析+教训
 
-### 六层分析框架
+### 六层分析框架 + 三大审计模块
 | Layer | 维度 | 核心问题 |
 |-------|------|---------|
 | 0 | 产品层 | 是什么？给谁用？ |
 | 1 | 体验层 | 怎么用？爽不爽？ |
 | 2 | 设计层 | 长什么样？风格判断 |
-| 3 | 功能层 | 核心流程+设计巧思 |
-| 4 | 数据层 | 指标体系假设 |
+| 3 | 功能层 | 核心流程+设计巧思+MoSCoW范围审计 |
+| 4 | 数据层 | 指标体系+指标有效性审计 |
 | 5 | 运营层 | AARRR增长策略 |
 | 6 | 商业层 | 怎么赚钱？壁垒在哪？ |
+
+分析全程穿插三大审计模块（借鉴 PMBOK 方法论）：
+- **Core Loop**：单用户价值闭环是否断链
+- **Risk Matrix**：5×5 概率×影响风险矩阵 + 应对策略
+- **PM Verdict**：用 PMBOK 六原则给产品团队打分 + 复盘三问
+- **阶段校准**：按探索/扩张/成熟/衰退调节分析深度
 
 ### 信息收集规则
 - 10+个信息来源渠道（官方、第三方评测、社媒、应用商店）
@@ -155,6 +161,16 @@ product-deconstruction/
 
 ## ✦ 更新日志
 
+### v3.0 (2026-09-07)
+- 引入 PMBOK® 方法论：阶段校准（Tailoring）、Core Loop 价值引擎、Risk Matrix 风险矩阵、PM Verdict 决策总评
+- 新增 MoSCoW 优先级/范围蔓延审计（Layer 3）
+- 新增指标有效性审计（Layer 4）
+- 全流程证据分级（一手/二手/推断），推断必须标注
+- 报告模块顺序扩展至 16 节
+
+### v2.0
+- 六层分析框架重构 + 证据分级雏形
+
 ### v1.0 (2026-09-07)
 - 5种视觉风格模板（学术/暗色/企业/编辑/极简）
 - 风格自动选择：根据产品类型匹配视觉方案
@@ -162,6 +178,15 @@ product-deconstruction/
 - 搜索渠道矩阵：10+信息来源+缺失数据处理规则
 - CSS条形图+SWOT矩阵+统计网格
 - 自包含HTML输出，无外部依赖
+
+## ✦ 致谢 Credits
+
+本 skill 的方法论与视觉体系借鉴了以下公开资源，特此致谢：
+
+- **[yanliudesign/product-teardown-skill](https://github.com/yanliudesign/product-teardown-skill)** — 15 章节拆解结构与双语写作启发
+- **[Geo1230/product-analysis](https://github.com/Geo1230/product-analysis)** — 阶段感知与书籍引用的思路启发
+- **PMBOK® Guide（PMI）** — 阶段校准（Tailoring）、风险绩效域、六大原则、焦点领域等项目管理方法论来源
+- **[lieflat-charts](https://github.com/larashero3-dotcom/lieflat-charts)** — 图型目录/视觉语法参考（PolyForm Noncommercial 1.0，非商业使用已标注来源）
 
 ## ✦ License
 
