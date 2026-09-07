@@ -3,7 +3,7 @@
 对互联网/AI产品进行系统性拆解分析，输出完整HTML图文报告。
 
 ![License](https://img.shields.io/badge/license-MIT-blue)
-![Version](https://img.shields.io/badge/version-3.0-green)
+![Version](https://img.shields.io/badge/version-1.0-green)
 
 ## ✦ 这是什么
 
@@ -153,21 +153,13 @@ product-deconstruction/
 
 ## ✦ 更新日志
 
-### v3.0 (2026-09-07)
-- 新增5种视觉风格模板（学术/暗色/企业/编辑/极简）
+### v1.0 (2026-09-07)
+- 5种视觉风格模板（学术/暗色/企业/编辑/极简）
 - 风格自动选择：根据产品类型匹配视觉方案
+- 六层分析框架 + 产品分级系统（S/A/B/C）
 - 搜索渠道矩阵：10+信息来源+缺失数据处理规则
-- 信息缺失自动判断（X平台 vs 公众号）
-- 参考网站列表：4类风格参考+用途说明
-
-### v2.0
-- 六层分析框架
-- 产品分级系统（S/A/B/C）
-- CSS条形图+SWOT矩阵
-- 自包含HTML输出
-
-### v1.0
-- 基础产品分析模板
+- CSS条形图+SWOT矩阵+统计网格
+- 自包含HTML输出，无外部依赖
 
 ## ✦ License
 
